@@ -1,25 +1,47 @@
-// import { createOpenAI } from '@ai-sdk/openai';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { streamText } from 'ai';
-import type { RequestHandler } from '../../$types';
-
-import { env } from '$env/dynamic/private';
-
-// const openai = createOpenAI({
-//   apiKey: env.OPENAI_API_KEY ?? '',
-// });
-const google = createGoogleGenerativeAI({
-  apiKey: env.GOOGLE_GENERATIVE_AI_API_KEY ?? ''
-});
+import type { RequestHandler } from './$types';
 
 export const POST = (async ({ request }) => {
-  const { messages } = await request.json();
+  try {
+      const { messages } = await request.json();
+      
+      const response = await fetch('http://127.0.0.1:8000/chat', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              message: messages[messages.length - 1].content,  // Send just the last message
+              session_id: 'default'
+          }),
+      });
 
-  const result = streamText({
-    // model: openai('gpt-4o-mini'),
-    model: google('gemini-1.5-flash-latest'),
-    messages,
-  });
+      if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.detail || 'Failed to get response from API');
+      }
 
-  return result.toDataStreamResponse();
+      const data = await response.json();
+      
+      return new Response(JSON.stringify({
+          content: data.message,  // Assuming your FastAPI returns { message: string }
+          timestamp: new Date().toISOString()
+      }), {
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      });
+      
+  } catch (error) {
+      console.error('Error in chat endpoint:', error);
+      return new Response(
+          JSON.stringify({ 
+              error: error instanceof Error ? error.message : 'Unknown error occurred' 
+          }), { 
+              status: 500,
+              headers: {
+                  'Content-Type': 'application/json'
+              }
+          }
+      );
+  }
 }) satisfies RequestHandler;
