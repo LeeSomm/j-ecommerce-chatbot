@@ -1,49 +1,72 @@
+// +server.ts
+import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { auth } from '$lib/firebase';
 
-const apiUrl = process.env.API_URL;
+const API_URL = process.env.API_URL || 'http://localhost:8000';
 
 export const POST = (async ({ request }) => {
-  try {
-      const { messages } = await request.json();
-      
-      const response = await fetch(`${apiUrl}/chat`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              message: messages[messages.length - 1].content,  // Send just the last message
-              session_id: 'default'
-          }),
-      });
+    try {
+        const { messages, idToken } = await request.json();
+        
+        // Check if we have a token
+        if (!idToken) {
+            throw error(401, 'No authentication token provided');
+        }
 
-      if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.detail || 'Failed to get response from API');
-      }
+        // Get the last user message
+        const lastUserMessage = [...messages]
+            .reverse()
+            .find(msg => msg.role === 'user');
+            
+        if (!lastUserMessage) {
+            throw error(400, 'No user message found');
+        }
 
-      const data = await response.json();
-      
-      return new Response(JSON.stringify({
-          content: data.message,  // Assuming your FastAPI returns { message: string }
-          timestamp: new Date().toISOString()
-      }), {
-          headers: {
-              'Content-Type': 'application/json'
-          }
-      });
-      
-  } catch (error) {
-      console.error('Error in chat endpoint:', error);
-      return new Response(
-          JSON.stringify({ 
-              error: error instanceof Error ? error.message : 'Unknown error occurred' 
-          }), { 
-              status: 500,
-              headers: {
-                  'Content-Type': 'application/json'
-              }
-          }
-      );
-  }
+        // Get current user and token
+        // const currentUser = auth.currentUser;
+        // if (!currentUser) {
+        //     throw error(401, 'User not authenticated');
+        // }
+
+        // const idToken = await currentUser.getIdToken();
+
+        const response = await fetch(`${API_URL}/chat`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
+            },
+            body: JSON.stringify({
+                message: lastUserMessage.content,
+                context: {}
+            }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw error(response.status, errorData.detail || 'Failed to get response from API');
+        }
+
+        const data = await response.json();
+        
+        return new Response(JSON.stringify({
+            message: data.message,
+            timestamp: data.timestamp
+        }), {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+    } catch (err) {
+        console.error('Error in chat endpoint:', err);
+        
+        // Handle different types of errors
+        if (err instanceof Error) {
+            throw error(500, err.message);
+        } else {
+            throw error(500, 'An unknown error occurred');
+        }
+    }
 }) satisfies RequestHandler;
