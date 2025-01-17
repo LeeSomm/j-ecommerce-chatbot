@@ -11,13 +11,6 @@
         "sourceMap": true,
         "strict": true,
         "moduleResolution": "bundler",
-        "paths": {
-            "$lib": ["./src/lib"],
-            "$lib/*": ["./src/lib/*"],
-            "$stores/*": ["./src/lib/stores/*"],
-            "$components/*": ["./src/lib/components/*"]
-        },
-        "baseUrl": ".",
         "outDir": "build",
         "target": "ES2022",
         "module": "ES2022",

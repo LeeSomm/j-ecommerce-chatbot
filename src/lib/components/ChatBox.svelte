@@ -5,15 +5,21 @@
     import { writable } from 'svelte/store';
     import { fade, fly } from 'svelte/transition';
     import { auth } from '$lib/firebase';
+    import ProductGallery from './ProductGallery.svelte';
   
+    interface ProductInfo {
+        product_name: string;
+        url: string;
+        image_links: string[];
+    }  
+    
     interface ChatMessage {
       role: 'user' | 'assistant';
       content: string;
       timestamp: string;
-      imageUrls?: string[];
-      productUrls?: string[];
+      product?: ProductInfo;
     }
-  
+
     const messages = writable<ChatMessage[]>([]);
     const input = writable('');
     const isLoading = writable(false);
@@ -64,12 +70,13 @@
   
         const data = await response.json();
         
+        let product: ProductInfo | undefined;
+        
         messages.update(msgs => [...msgs, {
-          role: 'assistant',
-          content: data.message,
-          timestamp: new Date().toISOString(),
-          imageUrls: data.image_urls,
-          productUrls: data.product_urls
+            role: 'assistant',
+            content: data.message,
+            timestamp: new Date().toISOString(),
+            product: data.product_json
         }]);
   
       } catch (error) {
@@ -91,13 +98,13 @@
     $: if (browser && $messages) scrollToBottom();
 </script>
 
-<div class="h-screen flex items-center justify-center bg-gray-100 p-4">
-    <div class="w-full max-w-4xl h-[600px] bg-white rounded-lg shadow-xl flex flex-col overflow-hidden">
+<div class="h-[calc(100vh-100px)] flex items-center justify-center bg-gray-100">
+    <div class="w-full max-w-5xl h-[calc(100vh-150px)] bg-white rounded-lg shadow-xl flex flex-col overflow-hidden">
         <!-- Chat header -->
         <div class="bg-blue-600 text-white p-4 flex items-center">
             <div>
-                <h1 class="text-xl font-bold">Japanese Product Assistant</h1>
-                <p class="text-sm opacity-75">Ask me about Japanese products</p>
+                <h1 class="text-xl font-bold">eCommerce Chatbot</h1>
+                <!-- <p class="text-sm opacity-75">Ask me about Japanese products</p> -->
             </div>
         </div>
   
@@ -121,31 +128,22 @@
                                     : 'bg-blue-500 text-white'}">
                                 <p class="whitespace-pre-wrap break-words">{message.content}</p>
                                 
-                                {#if message.imageUrls && message.imageUrls.length > 0}
-                                    <div class="mt-4 grid grid-cols-2 gap-2">
-                                        {#each message.imageUrls as imageUrl}
-                                            <img
-                                                src={imageUrl}
-                                                alt="Product"
-                                                class="rounded-lg w-full h-auto object-cover"
-                                                loading="lazy"
-                                            />
-                                        {/each}
-                                    </div>
-                                {/if}
-
-                                {#if message.productUrls && message.productUrls.length > 0}
-                                    <div class="mt-2">
-                                        {#each message.productUrls as url}
-                                            <a
-                                                href={url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                class="text-blue-500 hover:text-blue-700 underline block mt-1"
-                                            >
-                                                View Product →
-                                            </a>
-                                        {/each}
+                                {#if message.product}
+                                    <div class="mt-4 space-y-3 border-t pt-3">
+                                        <a
+                                            href={message.product.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="text-blue-600 hover:text-blue-800 font-medium block"
+                                        >
+                                            <b>{message.product.product_name}</b> ➡️
+                                        </a>
+                                        
+                                        <ProductGallery
+                                            images={message.product.image_links}
+                                            productUrl={message.product.url}
+                                            productName={message.product.product_name}
+                                        />
                                     </div>
                                 {/if}
                             </div>
@@ -176,7 +174,7 @@
             <div class="flex gap-2">
                 <input
                     bind:value={$input}
-                    placeholder="Ask about Japanese products..."
+                    placeholder="Type here..."
                     class="flex-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
                     disabled={$isLoading}
                 />

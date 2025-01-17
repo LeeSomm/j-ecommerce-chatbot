@@ -5,6 +5,7 @@
     import { user } from '$lib/stores/auth';
     import { onAuthStateChanged } from 'firebase/auth';
     import { goto } from '$app/navigation';
+    import Footer from '$lib/components/Footer.svelte';
   
     onMount(() => {
       const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -24,3 +25,4 @@
   </script>
   
   <slot />
+  <Footer />

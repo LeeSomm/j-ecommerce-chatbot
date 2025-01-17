@@ -1,7 +1,6 @@
 // +server.ts
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { auth } from '$lib/firebase';
 
 const API_URL = process.env.API_URL || 'http://localhost:8000';
 
@@ -22,14 +21,6 @@ export const POST = (async ({ request }) => {
         if (!lastUserMessage) {
             throw error(400, 'No user message found');
         }
-
-        // Get current user and token
-        // const currentUser = auth.currentUser;
-        // if (!currentUser) {
-        //     throw error(401, 'User not authenticated');
-        // }
-
-        // const idToken = await currentUser.getIdToken();
 
         const response = await fetch(`${API_URL}/chat`, {
             method: 'POST',
@@ -52,7 +43,8 @@ export const POST = (async ({ request }) => {
         
         return new Response(JSON.stringify({
             message: data.message,
-            timestamp: data.timestamp
+            timestamp: data.timestamp,
+            product_json: data.product_json  
         }), {
             headers: {
                 'Content-Type': 'application/json'

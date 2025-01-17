@@ -48,11 +48,21 @@
 
     <!-- Chat content -->
     <main class="container mx-auto p-4">
-      <div class="bg-white rounded-lg shadow p-6">
-        <p>This website connects an LLM with a database of ecommerce data from four Japanese food websites. Send it a message asking for recommendations or suggesting what kind of foods you like. If working correctly, it should provide you with a recommendation tailored to your message. Thank you for testing my application. Please give me any feedback you may have as I work on improving it.</p>
+      <div class="info-section mt-4 p-4 bg-gray-100 rounded-lg shadow-md text-sm">
+        <p class="mb-4 font-semibold">Thank you for testing my website.</p>
+        <p class="mb-2">This chatbot has access to a database of products from the following Japanese retailers:</p>
+        <ul class="list-disc list-inside mb-4">
+          <li><strong>Kumamoto Kabou:</strong> Bakery of Sweets</li>
+          <li><strong>Musousan:</strong> Tofu, Natto, and Soybean-based Bread</li>
+          <li><strong>Daisho:</strong> Savory Soup, Sauce, and Seasoning Manufacturer</li>
+          <li><strong>Kanohachi:</strong> Specialty Honey Store</li>
+        </ul>
+        <p class="mb-2">This chatbot is instructed to help provide tailored recommendations based on your conversation. Please begin a conversation and provide your preferences.</p>
+      </div>
+      
     <!-- Chat interface goes here -->
         <ChatBox />
-      </div>
+      
     </main>
   </div>
 {/if}
