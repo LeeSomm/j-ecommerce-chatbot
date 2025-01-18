@@ -84,7 +84,7 @@
     
     <!-- Thumbnails -->
     {#if hasMultipleImages}
-        <div class="flex gap-2 overflow-x-auto pb-2">
+        <div class="flex gap-2 overflow-x-auto pb-2 pt-1 px-0.5 ">
             {#each images as image, i}
                 <button
                     class="relative flex-shrink-0 w-16 h-16 rounded-md overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"

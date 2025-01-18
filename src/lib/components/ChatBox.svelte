@@ -138,12 +138,13 @@
                                         >
                                             <b>{message.product.product_name}</b> ➡️
                                         </a>
-                                        
-                                        <ProductGallery
-                                            images={message.product.image_links}
-                                            productUrl={message.product.url}
-                                            productName={message.product.product_name}
-                                        />
+                                        {#if message.product.image_links && message.product.image_links.length > 0}
+                                            <ProductGallery
+                                                images={message.product.image_links}
+                                                productUrl={message.product.url}
+                                                productName={message.product.product_name}
+                                            />
+                                        {/if}
                                     </div>
                                 {/if}
                             </div>
