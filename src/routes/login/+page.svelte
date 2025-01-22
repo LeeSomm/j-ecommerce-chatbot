@@ -1,5 +1,6 @@
 <!-- src/routes/login/+page.svelte -->
 <script lang="ts">
+    import "$src/app.css";
     import { auth } from '$lib/firebase';
     import { user } from '$lib/stores/auth';
     import { onMount } from 'svelte';

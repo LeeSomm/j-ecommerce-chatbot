@@ -52,11 +52,12 @@
         <p class="mb-4 font-semibold">Thank you for testing my website.</p>
         <p class="mb-2">This chatbot has access to a database of products from the following Japanese retailers:</p>
         <ul class="list-disc list-inside mb-4">
-          <li><strong>Kumamoto Kabou:</strong> Bakery of Sweets</li>
-          <li><strong>Musousan:</strong> Tofu, Natto, and Soybean-based Bread</li>
-          <li><strong>Daisho:</strong> Savory Soup, Sauce, and Seasoning Manufacturer</li>
-          <li><strong>Kanohachi:</strong> Specialty Honey Store</li>
+          <li><strong><a href="https://kumamotokabou.net/" target="_blank" rel="noopener">Kumamoto Kabou</a>:</strong> Bakery of Sweets</li>
+          <li><strong><a href="https://musouan-shop.jp/" target="_blank" rel="noopener">Musousan</a></strong> Tofu, Natto, and Soybean-based Bread</li>
+          <li><strong><a href="https://www.oec-daisho.com/" target="_blank" rel="noopener">Daisho</a>:</strong> Savory Soup, Sauce, and Seasoning Manufacturer</li>
+          <li><strong><a href="https://www.kanohachi.jp/" target="_blank" rel="noopener">Kanohachi</a>:</strong> Specialty Honey Store</li>
         </ul>
+        <p class="mb-2"><strong>Disclaimer:</strong> The e-commerce websites linked by this AI chatbot are not affiliated with ET-Lode, LLC. We do not endorse or take responsibility for the content, products, or services offered by these third-party websites.</p>
         <p class="mb-2">This chatbot is instructed to help provide tailored recommendations based on your conversation. Please begin a conversation and provide your preferences.</p>
       </div>
       
