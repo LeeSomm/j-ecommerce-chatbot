@@ -1,38 +1,28 @@
-# sv
+# 🛒 J-Ecommerce Chatbot
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A multilingual AI-powered chatbot that recommends products in **English** by referencing a structured **Japanese NoSQL product database**. Built with FastAPI, LangChain, and OpenAI, this proof-of-concept bridges the language and search gap for global shoppers interested in Japanese goods.
 
-## Creating a project
+---
 
-If you're seeing this, you've probably already done this step. Congrats!
+## 🚀 Features
 
-```bash
-# create a new project in the current directory
-npx sv create
+- 🔍 **Conversational Product Search**  
+  Users can ask for product recommendations in natural English (e.g., "Are there any specialty items from Kumamoto, Japan?").
 
-# create a new project in my-app
-npx sv create my-app
-```
+- 🇯🇵➡️🇺🇸 **Cross-Language Retrieval**  
+  Japanese product data is indexed and queried using RAG (Retrieval-Augmented Generation), with results surfaced in fluent English.
 
-## Developing
+- 📊 **Structured Product Info**  
+  Returns include key specs, price, and purchase links—parsed and summarized from Japanese websites.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+- 💬 **Context-Aware Conversations**  
+  Remembers the conversation state to refine or narrow product recommendations dynamically.
 
-```bash
-npm run dev
+---
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+## 🧱 Tech Stack
 
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+- **Frontend**: SvelteKit 
+- **Backend**: FastAPI, LangChain, OpenAI API (see j-ecommerce-api)
+- **Database**: Firestore NoSQL Document Database
+- **Parsed Data**: Utilized Parsel to acquire structured data from HTML 
